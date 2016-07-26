@@ -3,19 +3,20 @@ print('Initializing')
 from instagram.client import InstagramAPI
 import json
 
-client_id = #CLIENTID#
-client_secret = #CLIENTSECRET#
-access_token = #ACCESSTOKEN#
+client_id = #'12345678901234567890123456789012'
+client_secret = #'12345678901234567890123456789012'
+URL = 'https://instagram.com/oauth/authorize/?client_id=' + client_id + '&redirect_uri=http://localhost&response_type=token&scope=public_content'
 
-def is_number(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False
+print('Please click on this link and copy the access token from your address bar:')
+print(URL)
+access_token = input(':')
 
-print('authorizing')
+print('Authorizing')
 api = InstagramAPI(client_secret=client_secret, access_token=access_token)
+print('Authorization complete')
+
+###########################################################################################################################
+#Specify latitude, longitude and range
 
 print("Please input coordinates")
 
@@ -28,9 +29,7 @@ if (lat == "") and (lng == ""):
     lat = 51.969187
     lng = 5.665395
     rng = 5000
-
-# Get locations, their IDs, and coordinates for a given latitude and longitude
-
+###########################################################################################################################
 # Output of this section is 'processedlocations', a list of locations. 
 # Each location is a list with the location ID, its latitude, and its longitude.
 
@@ -44,12 +43,13 @@ for location in locations:
     replaced3 = str(replaced2).replace(', ',',')
 
     processedlocation = replaced3.rsplit(sep=',')
+    print("Facebook locations near this point:")
     if processedlocation[0] > '0':
         processedlocations.append(processedlocation)
-        print(processedlocation)
+        print(processedlocation)    
 
-#get pictures based on acquired locations
+###########################################################################################################################
+
+#get pictures based on latitude, longitude, and range
 
 pictures = api.media_search(count=10,lat=lat,lng=lng, distance=rng)
-
-print(pictures)
