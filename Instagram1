@@ -1,0 +1,55 @@
+print('Initializing')
+
+from instagram.client import InstagramAPI
+import json
+
+client_id = #CLIENTID#
+client_secret = #CLIENTSECRET#
+access_token = #ACCESSTOKEN#
+
+def is_number(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+print('authorizing')
+api = InstagramAPI(client_secret=client_secret, access_token=access_token)
+
+print("Please input coordinates")
+
+lat = input('Latitude: ')
+lng = input('Longitude: ')
+rng = input('Range (meters)')
+
+if (lat == "") and (lng == ""):
+    print('TEST MODE: Wageningen; 5 km range')
+    lat = 51.969187
+    lng = 5.665395
+    rng = 5000
+
+# Get locations, their IDs, and coordinates for a given latitude and longitude
+
+# Output of this section is 'processedlocations', a list of locations. 
+# Each location is a list with the location ID, its latitude, and its longitude.
+
+locations = api.location_search(lat=lat, lng=lng)
+processedlocations = []
+
+for location in locations:
+    stripped = str(location).lstrip('Location: ')
+    replaced1 = str(stripped).replace(' (Point: (',',')
+    replaced2 = str(replaced1).replace('))','')
+    replaced3 = str(replaced2).replace(', ',',')
+
+    processedlocation = replaced3.rsplit(sep=',')
+    if processedlocation[0] > '0':
+        processedlocations.append(processedlocation)
+        print(processedlocation)
+
+#get pictures based on acquired locations
+
+pictures = api.media_search(count=10,lat=lat,lng=lng, distance=rng)
+
+print(pictures)
